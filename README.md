@@ -1,4 +1,5 @@
 # ZipLoRA-pytorch
+
 This is an implementation of [ZipLoRA: Any Subject in Any Style by Effectively Merging LoRAs](https://ziplora.github.io/) by [mkshing](https://twitter.com/mk1stats).
 
 The paper summary by the author is found [here](https://twitter.com/natanielruizg/status/1727718489425616912).
@@ -6,6 +7,7 @@ The paper summary by the author is found [here](https://twitter.com/natanielruiz
 ![result](assets/result.png)
 
 ## Installation
+
 ```
 git clone git@github.com:mkshing/ziplora-pytorch.git
 cd ziplora-pytorch
@@ -15,11 +17,13 @@ pip install -r requirements.txt
 ## Usage
 
 ### 1. Train LoRAs for subject/style images
+
 In this step, 2 LoRAs for subject/style images are trained based on SDXL. Using SDXL here is important because they found that the pre-trained SDXL exhibits strong learning when fine-tuned on only one reference style image.
 
-Fortunately, diffusers already implemented LoRA based on SDXL [here](https://github.com/huggingface/diffusers/blob/main/examples/dreambooth/README_sdxl.md) and you can simply follow the instruction. 
+Fortunately, diffusers already implemented LoRA based on SDXL [here](https://github.com/huggingface/diffusers/blob/main/examples/dreambooth/README_sdxl.md) and you can simply follow the instruction.
 
 For example, your training script would be like this.
+
 ```bash
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 # for subject
@@ -57,8 +61,8 @@ accelerate launch train_dreambooth_lora_sdxl.py \
   --push_to_hub \
 ```
 
-* In the above script, all hyperparameters such as `--max_train_steps` and `--rank` are followed the paper. But, of course, you can tweak them for your images. 
-* You can find style images in [aim-uofa/StyleDrop-PyTorch](https://github.com/aim-uofa/StyleDrop-PyTorch/tree/main/data).
+- In the above script, all hyperparameters such as `--max_train_steps` and `--rank` are followed the paper. But, of course, you can tweak them for your images.
+- You can find style images in [aim-uofa/StyleDrop-PyTorch](https://github.com/aim-uofa/StyleDrop-PyTorch/tree/main/data).
 
 ### 2. Train ZipLoRA
 
@@ -75,7 +79,7 @@ export LORA_PATH2="mkshing/lora-sdxl-waterpainting"
 export INSTANCE_DIR2="waterpainting"
 export PROMPT2="a cat of in szn style"
 
-# general 
+# general
 export OUTPUT_DIR="ziplora-sdxl-dog-waterpainting"
 export VALID_PROMPT="a sbu dog in szn style"
 
@@ -107,7 +111,7 @@ accelerate launch train_dreambooth_ziplora_sdxl.py \
 
 ```
 
-* If you're facing VRAM limitations during training, use the `--quick_release` flag to help free up VRAM.
+- If you're facing VRAM limitations during training, use the `--quick_release` flag to help free up VRAM.
 
 ### 3. Inference
 
@@ -124,17 +128,17 @@ image.save("out.png")
 ```
 
 Also, you can quickly interact with your ziplora by using gradio.
+
 ```bash
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 export ZIPLORA_PATH="..."
 
-python inference.py --pretrained_model_name_or_path=$MODEL_NAME --ziplora_name_or_path=$ZIPLORA_PATH 
+python inference.py --pretrained_model_name_or_path=$MODEL_NAME --ziplora_name_or_path=$ZIPLORA_PATH
 ```
-
 
 ## TODO
 
 - [x] super quick instruction for training each loras
 - [x] ZipLoRA (training)
 - [x] ZipLoRA (inference)
-- [ ] Pre-optimization lora weights 
+- [ ] Pre-optimization lora weights
